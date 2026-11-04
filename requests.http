@@ -1,0 +1,118 @@
+@baseUrl = http://localhost:3000
+
+############################
+# PRODUTOS
+############################
+
+### Listar produtos
+GET {{baseUrl}}/products
+
+### Buscar produto
+GET {{baseUrl}}/products/1
+
+### Criar produto
+POST {{baseUrl}}/products
+Content-Type: application/json
+
+{
+  "name": "Açúcar Refinado 1kg",
+  "description": "Açúcar cristal refinado",
+  "price": 5.90
+}
+
+### Atualizar produto
+PUT {{baseUrl}}/products/3
+Content-Type: application/json
+
+{
+  "price": 7.90
+}
+
+### Erro 400: dados inválidos
+POST {{baseUrl}}/products
+Content-Type: application/json
+
+{
+  "price": -10
+}
+
+### Erro 404: produto inexistente
+GET {{baseUrl}}/products/999
+
+############################
+# CLIENTES
+############################
+
+### Listar clientes
+GET {{baseUrl}}/customers
+
+### Buscar cliente
+GET {{baseUrl}}/customers/1
+
+### Criar cliente
+POST {{baseUrl}}/customers
+Content-Type: application/json
+
+{
+  "name": "Ana Souza",
+  "email": "ana@email.com",
+  "phone": "11988887777"
+}
+
+### Erro 409: e-mail duplicado (RN01)
+POST {{baseUrl}}/customers
+Content-Type: application/json
+
+{
+  "name": "Outra Maria",
+  "email": "maria@email.com"
+}
+
+############################
+# PEDIDOS
+############################
+
+### Criar pedido
+POST {{baseUrl}}/orders
+Content-Type: application/json
+
+{
+  "customer_id": 1,
+  "items": [
+    { "product_id": 1, "quantity": 2 },
+    { "product_id": 2, "quantity": 3 }
+  ]
+}
+
+### Listar pedidos
+GET {{baseUrl}}/orders
+
+### Ver pedido com itens
+GET {{baseUrl}}/orders/1
+
+### Pedidos de um cliente
+GET {{baseUrl}}/customers/1/orders
+
+### Erro 404: cliente inexistente
+POST {{baseUrl}}/orders
+Content-Type: application/json
+
+{
+  "customer_id": 999,
+  "items": [{ "product_id": 1, "quantity": 1 }]
+}
+
+### Erro 404: produto inexistente
+POST {{baseUrl}}/orders
+Content-Type: application/json
+
+{
+  "customer_id": 1,
+  "items": [{ "product_id": 999, "quantity": 1 }]
+}
+
+### Erro 409: remover produto que está em pedido (RN07)
+DELETE {{baseUrl}}/products/1
+
+### Erro 409: remover cliente com pedidos (RN06)
+DELETE {{baseUrl}}/customers/1
